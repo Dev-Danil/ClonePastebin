@@ -65,6 +65,13 @@
         .table-title {
             font-weight: bold;
         }
+
+        .right {
+            text-align: center;
+            position: fixed; /* Фиксированное положение */
+            right: 10%; /* Расстояние от правого края окна браузера */
+            top: 30%;
+        }
     </style>
 </head>
 <body>
@@ -94,33 +101,64 @@
             </tr>
             <tr>
                 <td class="table-title">Time</td>
-                <td>{{$one->expiration_time}}</td>
+                <td>
+                    @php
+                        switch ($one->expiration_time){
+                            case -1:
+                                echo "Never";
+                                break;
+                            case 0.17:
+                                echo "10 Min";
+                                break;
+                            case 1:
+                                echo "1 Hour";
+                                break;
+                            case 24:
+                                echo "1 Day";
+                                break;
+                            case 168:
+                                echo "1 Week";
+                                break;
+                            case 730:
+                                echo "1 Month";
+                                break;
+                    }
+                    @endphp
+                </td>
             </tr>
             <tr>
                 <td class="table-title">Access</td>
-                <td>{{$one->access}}</td>
+                <td>
+                    @php
+                        switch ($one->access){
+                            case 0:
+                                echo "Unlisted";
+                                break;
+                            case 1:
+                                echo "Public";
+                                break;
+                            }
+                    @endphp
+
+                </td>
             </tr>
             <tr>
-                <td class="table-title">Date of destruction</td>
+                <td class="table-title">Created</td>
                 <td>{{$one->created_at}}</td>
             </tr>
         </table>
-
-        {{--<label class="flex-center ">RAW Paste Data</label>--}}
-        {{--<div class="flex-center">{{$one->paste}}</div>--}}
-
-        {{--<br>--}}
-        {{--<label>Time</label>--}}
-        {{--<div>{{$one->expiration_time}}</div>--}}
-        {{--<br>--}}
-        {{--<label>Access</label>--}}
-        {{--<div>{{$one->access}}</div>--}}
-        {{--<br>--}}
-        {{--<label>Date of destruction</label>--}}
-        {{--<div>{{$one->created_at}}</div>--}}
-
-    </div>
         @endforeach
+    </div>
+
+        <table class="right">
+            @foreach($tenPastes as $one)
+                <tr>
+                    <td>
+                        <a href="{{$one->id}}">{{$one->title}}</a>
+                    </td>
+                </tr>
+            @endforeach
+        </table>
 </div>
 </body>
 </html>

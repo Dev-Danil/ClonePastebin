@@ -13,14 +13,25 @@ class PastesController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(){
-        $pastes = App\Paste::index();
-        return view('list', compact('pastes'));
+        $pastes = Paste::listAllRecords();
+        $tenPastes = Paste::getTenLastPublicPastes();
+        return view('list', compact('pastes', 'tenPastes'));
     }
 
-
-    public function showSingle($id){
-        $paste = App\Paste::showSingle($id);
-        return view('single', compact('paste'));
+    /**
+     * Отдает определенную Пасту
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function show($id)
+    {
+        $paste = Paste::show($id);
+        $tenPastes = Paste::getTenLastPublicPastes();
+        if ($this->isAvailable($paste)) {
+            return view('single', compact('paste', 'tenPastes'));
+        } else {
+            return view('stub', compact('tenPastes'));
+        }
     }
 
 
@@ -29,8 +40,9 @@ class PastesController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create(){
-        $pastes = App\Paste::create();
-        return view('welcome', compact('pastes'));
+        Paste::create();
+        $tenPastes = Paste::getTenLastPublicPastes();
+        return view('welcome', compact('tenPastes'));
     }
 
     /**
@@ -38,7 +50,8 @@ class PastesController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function add(){
-        return view('add');
+        $tenPastes = Paste::getTenLastPublicPastes();
+        return view('add', compact('tenPastes'));
     }
 
     /**
@@ -48,10 +61,9 @@ class PastesController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request){
-//        dump($request->all());//вывод массива передаваемых данных
-        //валидация: поля обязательны к заполению
+        //валидация принимаемых полей
         $this->validate($request,[
-            'title' => 'required|max:255',
+            'title' => 'required|max:255|string',
             'paste' => 'required',
             'expiration_time' => 'required',
             'access' => 'required'
@@ -59,13 +71,52 @@ class PastesController extends Controller
 
         $data = $request->all();
 
-//        dump($data);
         $paste = new Paste();
         $paste->fill($data);    //заполнение модели информацией (массивом $data)
-        $paste->save();
-
-//        dump($paste);
+        $paste->save();     //сохранение модели
 
         return redirect('/');
+    }
+
+    /**
+     * Проверка на право показа Пасты(по критериям: жизнь Пасты и access=public)
+     * @param $paste
+     * @return bool
+     */
+    public function isAvailable($paste)
+    {
+        foreach ($paste as $p) {
+            $created = $p->created_at;
+            $flag = false;
+            switch ($p->expiration_time) {
+                case -1:
+                    $flag = true;
+                    break;
+                case 0.17:
+                    $created->modify("+ 10 minute");
+                    break;
+                case 1:
+                    $created->modify("+ 1 Hour");
+                    break;
+                case 24:
+                    $created->modify("+ 1 Day");
+                    break;
+                case 168:
+                    $created->modify("+ 1 Week");
+                    break;
+                case 730:
+                    $created->modify("+ 1 Month");
+                    break;
+            }
+        }
+
+        $created = strtotime($created);
+        $dateNow = strtotime(date("Y-m-d H:i:s"));
+
+        if ($dateNow < $created || $flag) {
+            return true;
+        }
+
+        return false;
     }
 }

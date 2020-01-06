@@ -21,7 +21,7 @@
         }
 
         .full-height {
-            height: 50vh;
+            height: 100vh;
         }
 
         .flex-center {
@@ -62,10 +62,6 @@
             margin-bottom: 30px;
         }
 
-        .table-title {
-            font-weight: bold;
-        }
-
         .right {
             text-align: center;
             position: fixed; /* Фиксированное положение */
@@ -75,53 +71,30 @@
     </style>
 </head>
 <body>
-<h1>Records</h1>
-{{--@foreach($pastes as $one)--}}
-{{--<h3> {{ $one }}</h3>--}}
-{{--@endforeach--}}
-
-<table style="border-spacing: 7px 11px;" class="content">
-    <tr style="font-weight: bold">
-        <td>ID</td>
-        <td>Title</td>
-        <td>Text of paste</td>
-        <td>Expiration time</td>
-        <td>Access</td>
-        <td>Created_at</td>
-        <td>Updated_at</td>
-    </tr>
-    @foreach($pastes as $one)
-        <tr>
-            <td>{{$one->id}}</td>
-            <td>{{$one->title}}</td>
-            <td>{{$one->paste}}</td>
-            <td>{{$one->expiration_time}}</td>
-            <td>{{$one->access}}</td>
-            <td>{{$one->created_at}}</td>
-            <td>{{$one->updated_at}}</td>
-        </tr>
-    @endforeach
-</table>
-
-
-<table class="right">
-    @foreach($tenPastes as $one)
-        <tr>
-            <td>
-                <a href="single/{{$one->id}}">{{$one->title}}</a>
-            </td>
-        </tr>
-    @endforeach
-</table>
-
 <div class="flex-center position-ref full-height">
-    <div class="links">
-        <a href="/">Home</a>
-        <a href="{{route('pasteFilling')}}">Add paste</a>
-        <a href="{{route('pasteCreate')}}">Create random paste</a>
+
+    <div class="content">
+        <div class="title m-b-md">
+            The paste is dead
+        </div>
+
+        <table class="right">
+            @foreach($tenPastes as $one)
+                <tr>
+                    <td>
+                        <a href="{{$one->id}}">{{$one->title}}</a>
+                    </td>
+                </tr>
+            @endforeach
+        </table>
+
+        <div class="links">
+            <a href="{{route('pasteFilling')}}">Add paste</a>
+            <a href="{{route('pasteCreate')}}">Create random paste</a>
+            <a href="{{route('pasteList')}}">List of pastes</a>
+        </div>
+
     </div>
 </div>
 </body>
 </html>
-
-

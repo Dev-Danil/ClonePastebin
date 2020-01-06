@@ -61,6 +61,13 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+
+            .right {
+                text-align: center;
+                position: fixed; /* Фиксированное положение */
+                right: 10%; /* Расстояние от правого края окна браузера */
+                top: 30%;
+            }
         </style>
     </head>
     <body>
@@ -88,11 +95,18 @@
                     <a href="{{route('pasteFilling')}}">Add paste</a>
                     <a href="{{route('pasteCreate')}}">Create random paste</a>
                     <a href="{{route('pasteList')}}">List of pastes</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
                 </div>
+
+                <table class="right">
+                    @foreach($tenPastes as $one)
+                        <tr>
+                            <td>
+                                <a href="single/{{$one->id}}">{{$one->title}}</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
+
             </div>
         </div>
     </body>
