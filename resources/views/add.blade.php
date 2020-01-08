@@ -113,7 +113,8 @@
                     <td>
                         <select id="expiration" name="expiration_time">
                             <option value="0.16667">10 Min</option>
-                            <option value="1" l>1 Hour</option>
+                            <option value="1">1 Hour</option>
+                            <option value="3">3 Hours</option>
                             <option value="24">1 Day</option>
                             <option value="168">1 Week</option>
                             <option value="730">1 Month</option>
@@ -148,7 +149,7 @@
             @foreach($tenPastes as $one)
                 <tr>
                     <td>
-                        <a href="single/{{$one->id}}">{{$one->title}}</a>
+                        <a href="single/{{$one->hash}}">{{$one->title}}</a>
                     </td>
                 </tr>
             @endforeach

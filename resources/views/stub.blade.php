@@ -82,13 +82,14 @@
             @foreach($tenPastes as $one)
                 <tr>
                     <td>
-                        <a href="{{$one->id}}">{{$one->title}}</a>
+                        <a href="{{$one->hash}}">{{$one->title}}</a>
                     </td>
                 </tr>
             @endforeach
         </table>
 
         <div class="links">
+            <a href="/">Home</a>
             <a href="{{route('pasteFilling')}}">Add paste</a>
             <a href="{{route('pasteCreate')}}">Create random paste</a>
             <a href="{{route('pasteList')}}">List of pastes</a>

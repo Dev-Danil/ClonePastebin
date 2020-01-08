@@ -24,6 +24,10 @@
             height: 100vh;
         }
 
+        .half-height {
+            margin-top: 100px;
+        }
+
         .flex-center {
             align-items: center;
             display: flex;
@@ -100,7 +104,7 @@
                 <td>{{$one->paste}}</td>
             </tr>
             <tr>
-                <td class="table-title">Time</td>
+                <td class="table-title">Lifetime</td>
                 <td>
                     @php
                         switch ($one->expiration_time){
@@ -112,6 +116,9 @@
                                 break;
                             case 1:
                                 echo "1 Hour";
+                                break;
+                            case 3:
+                                echo "3 Hours";
                                 break;
                             case 24:
                                 echo "1 Day";
@@ -148,13 +155,21 @@
             </tr>
         </table>
         @endforeach
+
+        <div class="links half-height">
+            <a href="/">Home</a>
+            <a href="{{route('pasteFilling')}}">Add paste</a>
+            <a href="{{route('pasteCreate')}}">Create random paste</a>
+            <a href="{{route('pasteList')}}">List of pastes</a>
+        </div>
+
     </div>
 
         <table class="right">
             @foreach($tenPastes as $one)
                 <tr>
                     <td>
-                        <a href="{{$one->id}}">{{$one->title}}</a>
+                        <a href="{{$one->hash}}">{{$one->title}}</a>
                     </td>
                 </tr>
             @endforeach

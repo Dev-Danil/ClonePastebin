@@ -101,7 +101,7 @@
                     @foreach($tenPastes as $one)
                         <tr>
                             <td>
-                                <a href="single/{{$one->id}}">{{$one->title}}</a>
+                                <a href="single/{{$one->hash}}">{{$one->title}}</a>
                             </td>
                         </tr>
                     @endforeach

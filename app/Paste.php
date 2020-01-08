@@ -15,6 +15,7 @@ class Paste extends Model
         'paste',
         'expiration_time',
         'access',
+        'hash',
     ];
 
     /**
@@ -28,13 +29,13 @@ class Paste extends Model
     }
 
     /**
-     * Отдает 1 запись по id
-     * @param $id
+     * Отдает 1 запись по hash
+     * @param $hash
      * @return mixed
      */
-    public static function show($id)
+    public static function show($hash)
     {
-        $singlePaste = Paste::where('id',$id)->get();
+        $singlePaste = Paste::where('hash', $hash)->get();
 
         return $singlePaste;
     }
@@ -44,10 +45,12 @@ class Paste extends Model
      */
     public static function create(){
         $addString = new Paste;
-        $addString->title = 'Title #'.time();
-        $addString->paste = 'For example #'.time();
+        $realTime = time();
+        $addString->title = 'Title #' . $realTime;
+        $addString->paste = 'For example #' . $realTime;
         $addString->expiration_time = '-1';
         $addString->access = '1';
+        $addString->hash = mb_strcut(hash('md5', $realTime), strlen($realTime) - 8, 8);
 
         $addString->save();
     }

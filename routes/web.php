@@ -19,7 +19,7 @@ Route::get('/', function () {
 Route::get('/add', 'PastesController@add')->name('pasteFilling');
 Route::post('/add', 'PastesController@store')->name('pasteStore');
 
-Route::get('/single/{id}', 'PastesController@show')->name('single');
+Route::get('/single/{hash}', 'PastesController@show')->name('single');
 
 Route::get('/list', 'PastesController@index')->name('pasteList');
 Route::get('/create', 'PastesController@create')->name('pasteCreate');

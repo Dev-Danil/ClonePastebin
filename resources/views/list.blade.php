@@ -83,6 +83,7 @@
 <table style="border-spacing: 7px 11px;" class="content">
     <tr style="font-weight: bold">
         <td>ID</td>
+        <td>Hash</td>
         <td>Title</td>
         <td>Text of paste</td>
         <td>Expiration time</td>
@@ -93,6 +94,7 @@
     @foreach($pastes as $one)
         <tr>
             <td>{{$one->id}}</td>
+            <td>{{$one->hash}}</td>
             <td>{{$one->title}}</td>
             <td>{{$one->paste}}</td>
             <td>{{$one->expiration_time}}</td>
@@ -108,7 +110,7 @@
     @foreach($tenPastes as $one)
         <tr>
             <td>
-                <a href="single/{{$one->id}}">{{$one->title}}</a>
+                <a href="single/{{$one->hash}}">{{$one->title}}</a>
             </td>
         </tr>
     @endforeach

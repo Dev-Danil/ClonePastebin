@@ -23,9 +23,9 @@ class PastesController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show($id)
+    public function show($hash)
     {
-        $paste = Paste::show($id);
+        $paste = Paste::show($hash);
         $tenPastes = Paste::getTenLastPublicPastes();
         if ($this->isAvailable($paste)) {
             return view('single', compact('paste', 'tenPastes'));
@@ -71,15 +71,19 @@ class PastesController extends Controller
 
         $data = $request->all();
 
+        $hash = hash('md5', time());    //Создаю хеш записи
+        $hash = mb_strcut($hash, strlen($hash) - 8, 8);
+        $data['hash'] = $hash;
+
         $paste = new Paste();
         $paste->fill($data);    //заполнение модели информацией (массивом $data)
         $paste->save();     //сохранение модели
 
-        return redirect('/');
+        return redirect('single/' . $hash);
     }
 
     /**
-     * Проверка на право показа Пасты(по критериям: жизнь Пасты и access=public)
+     * Проверка на право показа Пасты(по критериям: срок годности Пасты и access=public)
      * @param $paste
      * @return bool
      */
@@ -90,13 +94,15 @@ class PastesController extends Controller
             $flag = false;
             switch ($p->expiration_time) {
                 case -1:
-                    $flag = true;
-                    break;
+                    return true;
                 case 0.17:
                     $created->modify("+ 10 minute");
                     break;
                 case 1:
                     $created->modify("+ 1 Hour");
+                    break;
+                case 3:
+                    $created->modify("+ 3 Hour");
                     break;
                 case 24:
                     $created->modify("+ 1 Day");
@@ -113,7 +119,7 @@ class PastesController extends Controller
         $created = strtotime($created);
         $dateNow = strtotime(date("Y-m-d H:i:s"));
 
-        if ($dateNow < $created || $flag) {
+        if ($dateNow < $created) {
             return true;
         }
 
